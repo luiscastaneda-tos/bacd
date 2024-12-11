@@ -20,9 +20,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use( "/chat" , router_Open )
 app.use( "/excel" , router_excel )
-app.get("/",(req, res)=>{
-    res.json("DONE")
-})
+app.get('/', async function(req, res){
+    try{
+        res.send("ya estoy")
+        res.end()
+    }catch(err){
+        console.error(err)
+    }
+});
 
 app.use((err, req, res, next) => {
     const statuscode = err.statuscode || 500;
