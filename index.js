@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use( "/chat" , router_Open )
 app.use( "/excel" , router_excel )
-app.use("/",(req, res)=>{
+app.get("/",(req, res)=>{
     res.json("DONE")
 })
 
