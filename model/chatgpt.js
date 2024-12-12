@@ -58,7 +58,8 @@ async function getThread({ thread_id }) {
         return mensajes.reverse()
     } catch (error) {
         return {
-            error: true,
+            error,
+            ok: false,
             message: "no se encontro un hilo con el id " + thread_id
         }
     }
