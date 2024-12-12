@@ -6,25 +6,24 @@ const cors = require("cors")
 const app = express()
 
 const port = process.env.PORT || 3000
+const corsOptions = {
+    origin: ['http://localhost:5173', 'https://noktos-backend.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+};
 
-/*
-const {obtenerAcces} = require("./configs/zoho")
-(async ()=>{
-await obtenerAcces()
-})()
-*/
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use( "/chat" , router_Open )
-app.use( "/excel" , router_excel )
-app.get('/', async function(req, res){
-    try{
+app.use("/chat", router_Open)
+app.use("/excel", router_excel)
+app.get('/', async function (req, res) {
+    try {
         res.send("ya estoy")
         res.end()
-    }catch(err){
+    } catch (err) {
         console.error(err)
     }
 });
