@@ -1,4 +1,4 @@
-const { main, getThread } = require("../model/chatgpt.js")
+const { main, getThread } = require("../model/chatgpt")
 const express = require("express");
 const router = express.Router();
 

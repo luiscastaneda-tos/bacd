@@ -1,5 +1,5 @@
-const { getDataDB } = require("./database.js")
-const { connectGoogleApi, spreadsheetId } = require("../configs/google.js")
+const { getDataDB } = require("./database")
+const { connectGoogleApi, spreadsheetId } = require("../configs/google")
 
 async function clearReport(range) {
 

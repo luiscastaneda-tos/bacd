@@ -1,8 +1,8 @@
-const { getNombres, checkEmpalme, historialHoteles, generarReporte } = require("./database.js");
-const { getCiudadesYEstados, getRowPoliticas } = require("./fileSystem.js");
-const { appendDataToSpreed, appendDataToSpreedNoches } = require("./google.js");
-const { createATicket } = require("./zoho.js")
-const { getQueryParams } = require("./general.js")
+const { getNombres, checkEmpalme, historialHoteles, generarReporte } = require("./database");
+const { getCiudadesYEstados, getRowPoliticas } = require("./fileSystem");
+const { appendDataToSpreed, appendDataToSpreedNoches } = require("./google");
+const { createATicket } = require("./zoho")
+const { getQueryParams } = require("./general")
 
 //Maneja las llamadas de funcion
 async function handleRequiresAction(run, openai) {

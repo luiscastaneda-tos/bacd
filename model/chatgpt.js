@@ -1,5 +1,5 @@
-const { connectOpenAI, assistants } = require("../configs/chatgpt.js");
-const { handleRunStatus } = require("../helpers/chatgpt.js");
+const { connectOpenAI, assistants } = require("../configs/chatgpt");
+const { handleRunStatus } = require("../helpers/chatgpt");
 
 async function main({ thread_id, content }) {
     try {

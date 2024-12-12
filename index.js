@@ -1,5 +1,5 @@
-const router_Open = require("./router/chatgpt.js")
-const router_excel = require("./router/excel.js")
+const router_Open = require("./router/chatgpt")
+const router_excel = require("./router/excel")
 const bodyParser = require("body-parser")
 const express = require("express")
 const cors = require("cors")
@@ -8,7 +8,7 @@ const app = express()
 const port = process.env.PORT || 3000
 
 /*
-const {obtenerAcces} = require("./configs/zoho.js")
+const {obtenerAcces} = require("./configs/zoho")
 (async ()=>{
 await obtenerAcces()
 })()

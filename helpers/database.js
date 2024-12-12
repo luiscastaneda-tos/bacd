@@ -1,4 +1,4 @@
-const db = require("../configs/database.js")
+const db = require("../configs/database")
 
 //Obtiene los nombres parecidos en la base de datos
 async function getNombres(nombre) {

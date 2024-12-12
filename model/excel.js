@@ -1,5 +1,5 @@
-const { getDataDB } = require("../helpers/database.js");
-const { descifrar } = require("../helpers/general.js");
+const { getDataDB } = require("../helpers/database");
+const { descifrar } = require("../helpers/general");
 const ExcelJS = require('exceljs');
 
 async function crearExcel(req, res) {

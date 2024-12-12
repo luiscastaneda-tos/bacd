@@ -1,4 +1,4 @@
-const { crearExcel } = require("../model/excel.js")
+const { crearExcel } = require("../model/excel")
 const express = require("express");
 const router = express.Router();
 

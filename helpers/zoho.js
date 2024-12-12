@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-const { obtenerAcces } = require("../configs/zoho.js")
+const { obtenerAcces } = require("../configs/zoho")
 
 async function createATicket({informacion_viajantes, tabla, hoteles, check_in, check_out, destino, viajero, observaciones}) {
     let ticket_info = {
