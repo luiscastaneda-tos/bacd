@@ -4,12 +4,11 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
     try {
-        console.log("obteniendo")
         res.json(await getThread(req.query))
         res.end()
     } catch (err) {
         console.error(err)
-        res.status(400).json(err)
+        res.status(500).json(err)
     }
 })
 

@@ -47,6 +47,7 @@ async function main({ thread_id, content }) {
 
 async function getThread({ thread_id }) {
     try {
+        console.log("entrando a getThread")
         const openai = await connectOpenAI()
         thread = await openai.beta.threads.messages.list(thread_id);
         let mensajes = thread.body.data.map(element => {
@@ -57,6 +58,7 @@ async function getThread({ thread_id }) {
         });
         return mensajes.reverse()
     } catch (error) {
+        console.log(error)
         return {
             error,
             ok: false,

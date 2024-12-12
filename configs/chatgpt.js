@@ -3,6 +3,12 @@ require("dotenv").config()
 
 //Esta función conecta con chatgpt y regresa la conexión
 function connectOpenAI() {
+  console.log("entrando a conectar")
+  console.log({
+    apiKey: process.env.OPENAI_API_KEY,
+    organization: process.env.ORGANIZATION,
+    project: process.env.ID_PROJECT
+  })
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
     organization: process.env.ORGANIZATION,
