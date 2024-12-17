@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "deploy": "gcloud preview app deploy",
     "dev": "vercel dev",
     "build": "echo 'Build step is not needed for serverless functions'"
   },
