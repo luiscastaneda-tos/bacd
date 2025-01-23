@@ -1,8 +1,8 @@
 const { getNombres, checkEmpalme, historialHoteles, generarReporte } = require("./database");
 const { getCiudadesYEstados, getRowPoliticas } = require("./fileSystem");
-const { appendDataToSpreed, appendDataToSpreedNoches } = require("./google");
-const { createATicket } = require("./zoho")
-const { getQueryParams } = require("./general")
+const { appendDataToSpreed, appendDataToSpreedNoches, readHoteles, readHotelInfo } = require("./google");
+const { createATicket, getTicketData, getTicketDataVuelo } = require("./zoho")
+const { getQueryParams, createCupon, createCuponVuelo } = require("./general")
 
 //Maneja las llamadas de funcion
 async function handleRequiresAction(run, openai) {
@@ -15,12 +15,15 @@ async function handleRequiresAction(run, openai) {
     ) {
 
         // Promise.all recibe un array y espera a que todas las promesas de ahi se cumplan
+        console.log(run.required_action.submit_tool_outputs.tool_calls);
         const toolOutputs = await Promise.all(
+
 
             //El array que le vamos a mandar son todas las acciones que se deben realizar y que se encuentran en tool_calls
             run.required_action.submit_tool_outputs.tool_calls.map(async (tool) => {
 
                 let arguments = JSON.parse(tool.function.arguments)
+                console.log(arguments)
 
                 if (tool.function.name === "getNombres") {
                     const output = await getNombres(arguments.nombre);
@@ -110,10 +113,59 @@ async function handleRequiresAction(run, openai) {
                         output: output
                     };
 
+                } else if (tool.function.name === "readHoteles") {
+                    console.log(arguments)
+                    const output = await readHoteles(arguments);
+                    console.log(output)
+                    return {
+                        tool_call_id: tool.id,
+                        output: output
+                    };
+
+                } else if (tool.function.name === "readHotelInfo") {
+                    const output = await readHotelInfo(arguments);
+                    console.log(output)
+                    return {
+                        tool_call_id: tool.id,
+                        output: output
+                    };
+
+                } else if (tool.function.name === "getTicketData") {
+                    const output = await getTicketData(arguments);
+                    console.log(output)
+                    return {
+                        tool_call_id: tool.id,
+                        output: output
+                    };
+
+                } else if (tool.function.name === "createCupon") {
+                    const output = await createCupon(arguments);
+                    console.log(output)
+                    return {
+                        tool_call_id: tool.id,
+                        output: output
+                    };
+                } else if (tool.function.name === "getTicketDataVuelo") {
+                    const output = await getTicketDataVuelo(arguments);
+                    console.log(output)
+                    return {
+                        tool_call_id: tool.id,
+                        output: output
+                    };
+
+                } else if (tool.function.name === "createCuponVuelo") {
+                    const output = await createCuponVuelo(arguments);
+                    console.log(output)
+                    return {
+                        tool_call_id: tool.id,
+                        output: output
+                    };
                 }
+
             })
         );
 
+        let new_run;
         if (toolOutputs.length > 0) {
             new_run = await openai.beta.threads.runs.submitToolOutputsAndPoll(
                 run.thread_id,

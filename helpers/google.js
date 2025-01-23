@@ -1,5 +1,5 @@
 const { getDataDB } = require("./database")
-const { connectGoogleApi, spreadsheetId } = require("../configs/google")
+const { connectGoogleApi, spreadReportes, spreadHoteles } = require("../configs/google")
 
 async function clearReport(range) {
 
@@ -8,7 +8,7 @@ async function clearReport(range) {
   try {
 
     const response = await sheets.spreadsheets.values.clear({
-      spreadsheetId, range
+      spreadsheetId: spreadReportes, range
     })
 
     return response
@@ -25,7 +25,7 @@ async function appendDataToSpreedNoches({ query_mes, query_name, query_hotel, ra
     await clearReport(`noches!E3:G6`)
 
     let nombre_empresa = `select razon_social as empresa from vw_Reservas_AI where numero_socio = ${socio} group by razon_social;`
-    
+
     let data_empresa = await getDataDB({ query: nombre_empresa })
 
     let { empresa } = data_empresa[0]
@@ -101,10 +101,10 @@ async function appendDataToSpreedNoches({ query_mes, query_name, query_hotel, ra
 
     await addToSheet({ range: `noches!K10`, values: updates_nombre, raw: false })
 
-    return JSON.stringify({ok:true})
+    return JSON.stringify({ ok: true })
   } catch (error) {
     console.log(error)
-    return JSON.stringify({ok:false, message: "Error al agregar la data a la plantilla"})
+    return JSON.stringify({ ok: false, message: "Error al agregar la data a la plantilla" })
   }
 }
 
@@ -153,7 +153,7 @@ async function appendDataToSpreed({ query, range_date, socio }) {
   }
   catch (error) {
     console.log(error)
-    return JSON.stringify({ok: false})
+    return JSON.stringify({ ok: false })
   }
 }
 
@@ -164,7 +164,7 @@ async function addToSheet({ range, values, raw = true }) {
   try {
 
     const response = await sheets.spreadsheets.values.append({
-      spreadsheetId,
+      spreadsheetId: spreadReportes,
       range,
       resource: { values },
       valueInputOption: raw ? "RAW" : "USER_ENTERED"
@@ -178,8 +178,63 @@ async function addToSheet({ range, values, raw = true }) {
   }
 }
 
+async function readHoteles({ hoteles }) {
+  const { sheets } = connectGoogleApi()
+  const range = "sheet1!A2:C1242"
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId: spreadHoteles,
+    range
+  })
+  const encontrados = []
+
+  const respuesta = response.data.values.map((element, index) => {
+    let [hotel, direccion, desayuno] = element
+    if (hoteles.includes(hotel.trim().toUpperCase())) {
+      encontrados.push({
+        row: (index + 2),
+        hotel,
+        direccion,
+        desayuno
+      })
+      return null
+    } else {
+      return {
+        row: (index + 2),
+        hotel
+      }
+    }
+  })
+
+  if (encontrados.length == hoteles.length) {
+    return JSON.stringify({ encontrados })
+  } else {
+    return JSON.stringify({ lista_hoteles: respuesta, encontrados })
+  }
+}
+
+async function readHotelInfo({ indice }) {
+  const { sheets } = connectGoogleApi()
+  const range = `Sheet1!A${indice}:C${indice}`
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId: spreadHoteles,
+    range
+  })
+
+  const data = response.data.values.map((([hotel, direccion, desayuno]) => {
+    return {
+      hotel,
+      direccion,
+      desayuno
+    }
+  }))
+
+  return JSON.stringify(data)
+}
+
 module.exports = {
   clearReport,
   appendDataToSpreed,
-  appendDataToSpreedNoches
+  appendDataToSpreedNoches,
+  readHoteles,
+  readHotelInfo
 }

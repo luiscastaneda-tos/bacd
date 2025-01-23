@@ -1,7 +1,8 @@
 const { google } = require('googleapis');
 require("dotenv").config()
 
-const spreadsheetId = '1veqa7zsBtyTHbICJi_IUXRwsyOw1UXPXHFCTa1P-UnA'
+const spreadReportes = '1veqa7zsBtyTHbICJi_IUXRwsyOw1UXPXHFCTa1P-UnA'
+const spreadHoteles = "1fy9Y54B5yFkY7cDwuR7YgQqngl1F5s5fMcztmyVsu9s"
 // const spreadsheetReservas = '1NbCSS7QRoCO2yHEvG9wx8kcHIx4h6ygCfQ-OUrgUbS4'; //Este es para otro
 
 function connectGoogleApi() {
@@ -29,5 +30,6 @@ function connectGoogleApi() {
 
 module.exports = {
   connectGoogleApi,
-  spreadsheetId
+  spreadReportes,
+  spreadHoteles
 }

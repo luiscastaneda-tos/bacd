@@ -1,3 +1,7 @@
 node_modules
 credenciales.json
 .env
+.gcloudignore
+app.zip
+vercel.json
+app.yaml

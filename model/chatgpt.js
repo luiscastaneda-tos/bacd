@@ -1,16 +1,18 @@
 const { connectOpenAI, assistants } = require("../configs/chatgpt");
 const { handleRunStatus } = require("../helpers/chatgpt");
 
-async function main({ thread_id, content }) {
+async function main({ thread_id, content, assistantID = assistants.assistant_id }) {
     try {
         //Obtenemos la conexión y el asistente
         const openai = connectOpenAI()
-
+        console.log("buscando al assitente")
+        
         //Extraemos al asistente que se encuentre en nuestro id de asistente
         let assistant = await openai.beta.assistants.retrieve(
-            assistants.assistant_id
+            assistantID
         )
-
+        console.log("ahora el hilo")
+        
         //Revisamos si existe un hilo actual y si no creamos uno para tener un hilo de mensajes
         let thread
         if (!thread_id) {
@@ -27,7 +29,8 @@ async function main({ thread_id, content }) {
                 content
             }
         );
-
+        
+        console.log("creamos el run")
         //Corres el mensaje con este objeto para saber que paso cuando corriste el mensaje
         let run = await openai.beta.threads.runs.createAndPoll(
             thread.id,
@@ -36,10 +39,11 @@ async function main({ thread_id, content }) {
                 instructions: assistant.instructions
             }
         );
-
+        
+        console.log("se creo el run")
         //Retornamos lo que nos de al revisar lo que tiene el run y enviamos el openai autorizado
         return await handleRunStatus(run, openai)
-
+        
     } catch (error) {
         return console.log(error)
     }
@@ -47,7 +51,6 @@ async function main({ thread_id, content }) {
 
 async function getThread({ thread_id }) {
     try {
-        console.log("entrando a getThread")
         const openai = await connectOpenAI()
         thread = await openai.beta.threads.messages.list(thread_id);
         let mensajes = thread.body.data.map(element => {

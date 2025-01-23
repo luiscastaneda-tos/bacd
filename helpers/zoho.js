@@ -1,7 +1,8 @@
 const fetch = require("node-fetch");
 const { obtenerAcces } = require("../configs/zoho")
+let departmentId = 603403000018558029
 
-async function createATicket({informacion_viajantes, tabla, hoteles, check_in, check_out, destino, viajero, observaciones}) {
+async function createATicket({ informacion_viajantes, tabla, hoteles, check_in, check_out, destino, viajero, observaciones }) {
     let ticket_info = {
         "subject": "TICKET PRUEBA",
         "description": `${informacion_viajantes}<br><br><br><br>${tabla}`,
@@ -42,6 +43,72 @@ async function createATicket({informacion_viajantes, tabla, hoteles, check_in, c
     }
 }
 
+async function getTicketData({ ticketId }) {
+    let accessToken = await obtenerAcces();
+    const url = `https://desk.zoho.com/api/v1/tickets/${ticketId}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Zoho-oauthtoken ${accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            console.log(response)
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const ticketData = await response.json();
+        const respuesta = {
+            resolution: ticketData.resolution,
+            checkin: ticketData.cf.cf_check_in ? ticketData.cf.cf_check_in : ticketData.customFields["CHECK IN"],
+            checkout: ticketData.cf.cf_check_out ? ticketData.cf.cf_check_out : ticketData.customFields["CHECK OUT"],
+            noches: ticketData.cf.cf_noches ? ticketData.cf.cf_noches : ticketData.customFields["Noches"]
+        };
+
+        return JSON.stringify(respuesta)
+
+    } catch (error) {
+        console.error('Error al obtener el ticket:', error);
+        return JSON.stringify({ error: error.message });
+    }
+}
+
+async function getTicketDataVuelo({ ticketId }) {
+    let accessToken = await obtenerAcces();
+    const url = `https://desk.zoho.com/api/v1/tickets/${ticketId}/conversations`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Zoho-oauthtoken ${accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            console.log(response)
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const ticketData = await response.json();
+        const result = {
+            content: ticketData.data[0].content.replaceAll("&amp;", "&")
+        }
+
+        return JSON.stringify(result)
+
+    } catch (error) {
+        console.error('Error al obtener el ticket:', error);
+        return JSON.stringify({ error: error.message });
+    }
+}
 module.exports = {
-    createATicket
+    createATicket,
+    getTicketData,
+    getTicketDataVuelo
 }

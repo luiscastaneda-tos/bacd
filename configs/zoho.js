@@ -9,7 +9,6 @@ const config = {
 
 async function obtenerAcces() {
     try {
-        console.log(config)
         const response = await fetch('https://accounts.zoho.com/oauth/v2/token', {
             method: 'POST',
             headers: {
@@ -24,7 +23,6 @@ async function obtenerAcces() {
             throw new Error(data.error || 'Error al obtener el access token');
         }
 
-        console.log(data);
         return data.access_token;
 
     } catch (error) {
