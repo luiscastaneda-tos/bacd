@@ -180,7 +180,7 @@ async function addToSheet({ range, values, raw = true }) {
 
 async function readHoteles({ hoteles }) {
   const { sheets } = connectGoogleApi()
-  const range = "sheet1!A2:C1242"
+  const range = "sheet1!A2:C"
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: spreadHoteles,
     range

@@ -1,24 +1,26 @@
 const mysql = require("mysql2/promise");
-require("dotenv").config()
+require("dotenv").config();
 
 async function query(sql, params) {
+  let connection;
 
-    const connection = await mysql.createConnection({
-        host: process.env.HOSTNAME,
-        user: process.env.USER,
-        password: process.env.PASSWORD,
-        database: process.env.DATABASE
-    })
+  try {
+    connection = await mysql.createConnection({
+      host: process.env.DB_HOSTNAME,
+      user: process.env.USER,
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE
+    });
 
-    try {
-        const [results, ] = await connection.execute(sql, params);
-        return results;
-
-    } catch (error) {
-        console.error(error)
-    } finally {
-        await connection.end()
+    const [results] = await connection.execute(sql, params);
+    return results;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    if (connection) {
+      await connection.end();
     }
+  }
 }
 
-module.exports = { query }
+module.exports = { query };
