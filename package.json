@@ -1,9 +1,9 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node app.js",
     "deploy": "gcloud preview app deploy",
     "dev": "vercel dev",
     "build": "echo 'Build step is not needed for serverless functions'"
